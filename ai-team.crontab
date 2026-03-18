@@ -1,0 +1,45 @@
+# =============================================================================
+# AI Dev Team — Crontab configuration
+# For Claude Max subscription (Claude Code CLI)
+# =============================================================================
+# Installation: crontab ai-team.crontab
+# Or: crontab -e and copy the lines below
+#
+# IMPORTANT: If the project is not in $AI_TEAM_DIR/, edit AI_TEAM_DIR below
+#            and all paths in the crontab lines.
+# =============================================================================
+
+# Environment
+SHELL=/bin/bash
+PATH=/usr/local/bin:/usr/bin:/bin:/home/ubuntu/.npm-global/bin
+AI_TEAM_DIR=/path/to/ai-team
+
+# -----------------------------------------------------------------------------
+# DEV TEAM — every 40 minutes (0-24h)
+# 6 agents: PO, PM, Dev1, Dev2, DevOps, Tester
+# -----------------------------------------------------------------------------
+*/40 * * * * $AI_TEAM_DIR/scripts/orchestrator_cli.sh dev-team >> $AI_TEAM_DIR/logs/cron.log 2>&1
+
+# -----------------------------------------------------------------------------
+# SECURITY TEAM — once daily at 6:00 AM
+# 3 agents: Analyst, Engineer, Pentester
+# -----------------------------------------------------------------------------
+0 6 * * * $AI_TEAM_DIR/scripts/orchestrator_cli.sh security >> $AI_TEAM_DIR/logs/cron.log 2>&1
+
+# -----------------------------------------------------------------------------
+# Alternatives (uncomment what you need)
+# -----------------------------------------------------------------------------
+
+# All 9 agents every 2 hours (more demanding on Max limits)
+# 0 */2 * * * $AI_TEAM_DIR/scripts/orchestrator_cli.sh all >> $AI_TEAM_DIR/logs/cron.log 2>&1
+
+# Minimal mode (3 agents) — conserves Max limits
+# */40 * * * * $AI_TEAM_DIR/scripts/orchestrator_cli.sh minimal >> $AI_TEAM_DIR/logs/cron.log 2>&1
+
+# -----------------------------------------------------------------------------
+# Maintenance
+# -----------------------------------------------------------------------------
+
+# Cleanup old logs — monthly
+0 2 1 * * find $AI_TEAM_DIR/logs -name "*.log" -mtime +30 -delete 2>/dev/null
+0 2 1 * * find $AI_TEAM_DIR/board/archive -name "*.md" -mtime +60 -delete 2>/dev/null

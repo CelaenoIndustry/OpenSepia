@@ -1,0 +1,24 @@
+limits:
+  max_api_calls_per_cycle: 5
+  max_daily_cost_usd: 10.0
+  max_tokens_per_agent: 8192
+  pause_between_agents: 5
+project:
+  description: Describe your project here. The more detail you provide, the better
+    the agents will understand what to build.
+  name: My Project
+  paths:
+    archive: board/archive
+    board: board
+    logs: logs
+    workspace: workspace
+  tech_stack:
+    ci_cd: gitlab/github
+    database: mongodb
+    deployment: docker
+    framework: fastapi + angular
+    language: python + typescript
+sprint:
+  current_cycle: 0
+  current_sprint: 1
+  cycles_per_sprint: 10

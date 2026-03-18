@@ -1,0 +1,92 @@
+# =============================================================================
+# Docker Compose Template
+# DevOps agent modifies this based on project needs
+# =============================================================================
+
+services:
+  # ----- Main application -----
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: myapp
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - APP_ENV=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-appdb}
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - app-data:/app/data
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "managed-by=ai-team"
+
+  # ----- PostgreSQL database -----
+  db:
+    image: postgres:16-alpine
+    container_name: myapp-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-app}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      - POSTGRES_DB=${POSTGRES_DB:-appdb}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d appdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "managed-by=ai-team"
+
+  # ----- Redis cache -----
+  redis:
+    image: redis:7-alpine
+    container_name: myapp-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "managed-by=ai-team"
+
+  # ----- Nginx reverse proxy (optional) -----
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: myapp-nginx
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./certs:/etc/nginx/certs:ro
+  #   depends_on:
+  #     - app
+
+volumes:
+  app-data:
+  db-data:
+  redis-data:
+
+networks:
+  default:
+    name: myapp-network
