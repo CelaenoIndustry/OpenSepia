@@ -8,8 +8,7 @@
 
 ## Demo
 
-<!-- TODO: Add demo video here -->
-<!-- [![AI Dev Team Demo](docs/demo-thumbnail.png)](https://youtube.com/watch?v=YOUR_VIDEO_ID) -->
+[![AI Dev Team Demo](docs/demo-thumbnail.png)](https://www.youtube.com/watch?v=g9dM9kMtV4M)
 
 **See it in action:** We gave the team a one-paragraph brief to build a RAG application. It ran overnight and produced 28 user stories, 3,600 lines of code, 400+ tests, and 10 merged MRs on GitLab — all fully autonomously. See [examples/rag-app/](examples/rag-app/) for the initial brief and results.
 
@@ -17,7 +16,7 @@
 
 ## What Makes This Different
 
-Unlike other multi-agent frameworks (CrewAI, AutoGen, MetaGPT, OpenAI Swarm/Symphony), AI Dev Team is **truly autonomous**:
+Compared to other multi-agent frameworks (CrewAI, AutoGen, MetaGPT, OpenAI Swarm/Symphony), AI Dev Team takes a different approach — **continuous autonomy** across days and weeks, not just within a single session:
 
 | | Other frameworks | AI Dev Team |
 |---|---|---|
